@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, Lakshman Anumolu, Pradeep Garigipati
+ * Copyright (c) 2017, Lakshman Anumolu, Pradeep Garigipati
  * All rights reserved.
  *
  * This file is part of MeshIO whose distribution is governed by
@@ -9,9 +9,10 @@
 
 /**
  * Write mtl file, courtesy obj_writer.cc of tinyobjloader.
+ * TODO: Thorough testing needed for this function
  */
 template<typename T>
-bool WriteMtl(const char* pMtlFileName,
+bool writeMaterial(const char* pMtlFileName,
               const std::vector<tinyobj::material_t> &pMaterials)
 {
     std::ofstream ofs(pMtlFileName, std::ios::out);
@@ -64,7 +65,7 @@ template<typename T>
 bool write(const char* pFileName, const OBJData<T> &pObjects)
 {
     std::string fileName(pFileName);
-    std::string mtlFileName = GetFileBaseName(fileName) + ".mtl";
+    std::string mtlFileName = getFileBaseName(fileName) + ".mtl";
 
     std::ofstream ofs(pFileName, std::ios::out);
 
@@ -185,7 +186,7 @@ bool write(const char* pFileName, const OBJData<T> &pObjects)
     ofs.close();
 
     // material file
-    bool write_mtl_ret = WriteMtl<T>(mtlFileName.c_str(), pObjects.mOBJMaterials);
+    bool write_mtl_ret = writeMaterial<T>(mtlFileName.c_str(), pObjects.mOBJMaterials);
 
     return write_mtl_ret;
 }

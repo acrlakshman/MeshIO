@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, Lakshman Anumolu, Pradeep Garigipati
+ * Copyright (c) 2017, Lakshman Anumolu, Pradeep Garigipati
  * All rights reserved.
  *
  * This file is part of MeshIO whose distribution is governed by
@@ -58,39 +58,59 @@ class GeometryData {
     }
 
     virtual bool operator==(const GeometryData<T>& pGeometryDataObj) {
-        if (mPositions.size() != pGeometryDataObj.mPositions.size())
+        if (mPositions.size() != pGeometryDataObj.mPositions.size()) {
             return false;
-        if (mNormals.size() != pGeometryDataObj.mNormals.size())
+        }
+        if (mNormals.size() != pGeometryDataObj.mNormals.size()) {
             return false;
-        if (mTexturePositions.size()!=pGeometryDataObj.mTexturePositions.size())
+        }
+        if (mTexturePositions.size()!=pGeometryDataObj.mTexturePositions.size()) {
             return false;
-        if (mColors.size() != pGeometryDataObj.mColors.size())
+        }
+        if (mColors.size() != pGeometryDataObj.mColors.size()) {
             return false;
+        }
         if (mParameterSpaceVertices.size() !=
-           pGeometryDataObj.mParameterSpaceVertices.size())
+           pGeometryDataObj.mParameterSpaceVertices.size()) {
             return false;
-        if (mPositions.size())
-            for (unsigned i = 0; i < mPositions.size(); ++i)
-                if (!(mPositions[i] == pGeometryDataObj.mPositions[i]))
+        }
+        if (mPositions.size()) {
+            for (unsigned i = 0; i < mPositions.size(); ++i) {
+                if (not (mPositions[i] == pGeometryDataObj.mPositions[i])) {
                     return false;
-        if (mNormals.size())
-            for (unsigned i = 0; i < mNormals.size(); ++i)
-                if (!(mNormals[i] == pGeometryDataObj.mNormals[i]))
+                }
+            }
+        }
+        if (mNormals.size()) {
+            for (unsigned i = 0; i < mNormals.size(); ++i) {
+                if (not (mNormals[i] == pGeometryDataObj.mNormals[i])) {
                     return false;
-        if (mTexturePositions.size())
-            for (unsigned i = 0; i < mTexturePositions.size(); ++i)
-                if (!(mTexturePositions[i] ==
-                      pGeometryDataObj.mTexturePositions[i]))
+                }
+            }
+        }
+        if (mTexturePositions.size()) {
+            for (unsigned i = 0; i < mTexturePositions.size(); ++i) {
+                if (not (mTexturePositions[i] ==
+                      pGeometryDataObj.mTexturePositions[i])) {
                     return false;
-        if (mColors.size())
-            for (unsigned i = 0; i < mColors.size(); ++i)
-                if (!(mColors[i] == pGeometryDataObj.mColors[i]))
+                }
+            }
+        }
+        if (mColors.size()) {
+            for (unsigned i = 0; i < mColors.size(); ++i) {
+                if (not (mColors[i] == pGeometryDataObj.mColors[i])) {
                     return false;
-        if (mParameterSpaceVertices.size())
-            for (unsigned i = 0; i < mParameterSpaceVertices.size(); ++i)
-                if (!(mParameterSpaceVertices[i] ==
-                      pGeometryDataObj.mParameterSpaceVertices[i]))
+                }
+            }
+        }
+        if (mParameterSpaceVertices.size()) {
+            for (unsigned i = 0; i < mParameterSpaceVertices.size(); ++i) {
+                if (not (mParameterSpaceVertices[i] ==
+                      pGeometryDataObj.mParameterSpaceVertices[i])) {
                     return false;
+                }
+            }
+        }
         return true;
     }
 };

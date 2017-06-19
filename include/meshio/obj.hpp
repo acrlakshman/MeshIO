@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, Lakshman Anumolu, Pradeep Garigipati
+ * Copyright (c) 2017, Lakshman Anumolu, Pradeep Garigipati
  * All rights reserved.
  *
  * This file is part of MeshIO whose distribution is governed by
@@ -12,17 +12,15 @@
 
 #define TINYOBJLOADER_IMPLEMENTATION
 
-#include "../utilities.hpp"
-#include "../meshio_defines.hpp"
-#include "../../third_party/tiny_obj_loader.h"
+#include "./utilities.hpp"
+#include "./meshio_defines.hpp"
+#include "../third_party/tiny_obj_loader.h"
 
 #include <iostream>
 #include <fstream>
 #include <sstream>
 
 namespace meshio
-{
-namespace obj
 {
 
 /* Datastructure to store Wavefront OBJ */
@@ -60,16 +58,17 @@ class OBJAttribute : public GeometryData<T> {
                 dynamic_cast<GeometryData<T>&>(
                         const_cast<OBJAttribute<T>&>(pOBJAttribute))) {
 
-            if (!mOBJName.compare(pOBJAttribute.mOBJName)) {
+            if (not mOBJName.compare(pOBJAttribute.mOBJName)) {
                 // Checking equality for mMaterialIDs.
                 if (mMaterialIDs.size() && pOBJAttribute.mMaterialIDs.size()) {
                     for (unsigned i = 0; i < mMaterialIDs.size(); ++i) {
-                        if (!(mMaterialIDs[i] == pOBJAttribute.mMaterialIDs[i]))
+                        if (not (mMaterialIDs[i] == pOBJAttribute.mMaterialIDs[i])) {
                             return false;
+                        }
                     }
                     return true;
-                } else if (!mMaterialIDs.size() &&
-                           !pOBJAttribute.mMaterialIDs.size()) {
+                } else if (not mMaterialIDs.size() &&
+                           not pOBJAttribute.mMaterialIDs.size()) {
                     return true;
                 } else {
                     return false;
@@ -97,7 +96,7 @@ class OBJData {
         clear();
     }
 
-    // TODO Delete this function
+    // TODO: Check whether this can be made virtual by making OBJData derived
     void print() {
         for (unsigned i = 0; i < mOBJAttributes.size(); ++i) {
             OBJAttribute<T> &objAttribute = mOBJAttributes[i];
@@ -121,110 +120,136 @@ class OBJData {
             }
         }
     }
-    // End delete
 
     void clear() {
-        for (unsigned i = 0; i < mOBJAttributes.size(); ++i)
+        for (unsigned i = 0; i < mOBJAttributes.size(); ++i) {
             mOBJAttributes[i].clear();
+        }
         mOBJAttributes.clear();
         mOBJMaterials.clear();
     }
 
-    bool isEqualOBJAttributes(const OBJData<T>& pOBJData) {
-        return (mOBJAttributes == pOBJData.mOBJAttributes);
+    bool areAttributesSame(const OBJData<T>& pOBJData) {
+        if (mOBJAttributes.size() == pOBJData.mOBJAttributes.size()) {
+            for (unsigned i = 0; i < mOBJAttributes.size(); ++i) {
+                if (not (mOBJAttributes[i] == pOBJData.mOBJAttributes[i])) {
+                    return false;
+                }
+            }
+            return true;
+        } else {
+            return false;
+        }
     }
 
-    bool isEqualOBJMaterials(const OBJData<T>& pOBJData) {
+    bool areMaterialsSame(const OBJData<T>& pOBJData) {
         if (mOBJMaterials.size() && pOBJData.mOBJMaterials.size()) {
             for (unsigned i = 0; i < mOBJMaterials.size(); ++i) {
 
-                if (!isEqual(mOBJMaterials[i].ambient[0],
+                if (not isEqual(mOBJMaterials[i].ambient[0],
                              pOBJData.mOBJMaterials[i].ambient[0]) ||
-                    !isEqual(mOBJMaterials[i].ambient[1],
+                    not isEqual(mOBJMaterials[i].ambient[1],
                              pOBJData.mOBJMaterials[i].ambient[1]) ||
-                    !isEqual(mOBJMaterials[i].ambient[2],
-                             pOBJData.mOBJMaterials[i].ambient[2]))
+                    not isEqual(mOBJMaterials[i].ambient[2],
+                             pOBJData.mOBJMaterials[i].ambient[2])) {
                     return false;
+                }
 
-                if (!isEqual(mOBJMaterials[i].diffuse[0],
+                if (not isEqual(mOBJMaterials[i].diffuse[0],
                              pOBJData.mOBJMaterials[i].diffuse[0]) ||
-                    !isEqual(mOBJMaterials[i].diffuse[1],
+                    not isEqual(mOBJMaterials[i].diffuse[1],
                              pOBJData.mOBJMaterials[i].diffuse[1]) ||
-                    !isEqual(mOBJMaterials[i].diffuse[2],
-                             pOBJData.mOBJMaterials[i].diffuse[2]))
+                    not isEqual(mOBJMaterials[i].diffuse[2],
+                             pOBJData.mOBJMaterials[i].diffuse[2])) {
                     return false;
+                }
 
-                if (!isEqual(mOBJMaterials[i].specular[0],
+                if (not isEqual(mOBJMaterials[i].specular[0],
                              pOBJData.mOBJMaterials[i].specular[0]) ||
-                    !isEqual(mOBJMaterials[i].specular[1],
+                    not isEqual(mOBJMaterials[i].specular[1],
                              pOBJData.mOBJMaterials[i].specular[1]) ||
-                    !isEqual(mOBJMaterials[i].specular[2],
-                             pOBJData.mOBJMaterials[i].specular[2]))
+                    not isEqual(mOBJMaterials[i].specular[2],
+                             pOBJData.mOBJMaterials[i].specular[2])) {
                     return false;
+                }
 
-                if (!isEqual(mOBJMaterials[i].transmittance[0],
+                if (not isEqual(mOBJMaterials[i].transmittance[0],
                              pOBJData.mOBJMaterials[i].transmittance[0]) ||
-                    !isEqual(mOBJMaterials[i].transmittance[1],
+                    not isEqual(mOBJMaterials[i].transmittance[1],
                              pOBJData.mOBJMaterials[i].transmittance[1]) ||
-                    !isEqual(mOBJMaterials[i].transmittance[2],
-                             pOBJData.mOBJMaterials[i].transmittance[2]))
+                    not isEqual(mOBJMaterials[i].transmittance[2],
+                             pOBJData.mOBJMaterials[i].transmittance[2])) {
                     return false;
+                }
 
-                if (!isEqual(mOBJMaterials[i].emission[0],
+                if (not isEqual(mOBJMaterials[i].emission[0],
                              pOBJData.mOBJMaterials[i].emission[0]) ||
-                    !isEqual(mOBJMaterials[i].emission[1],
+                    not isEqual(mOBJMaterials[i].emission[1],
                              pOBJData.mOBJMaterials[i].emission[1]) ||
-                    !isEqual(mOBJMaterials[i].emission[2],
-                             pOBJData.mOBJMaterials[i].emission[2]))
+                    not isEqual(mOBJMaterials[i].emission[2],
+                             pOBJData.mOBJMaterials[i].emission[2])) {
                     return false;
+                }
 
-                if (!isEqual(mOBJMaterials[i].shininess,
-                             pOBJData.mOBJMaterials[i].shininess))
+                if (not isEqual(mOBJMaterials[i].shininess,
+                             pOBJData.mOBJMaterials[i].shininess)) {
                     return false;
+                }
 
-                if (!isEqual(mOBJMaterials[i].ior,
-                             pOBJData.mOBJMaterials[i].ior))
+                if (not isEqual(mOBJMaterials[i].ior,
+                             pOBJData.mOBJMaterials[i].ior)) {
                     return false;
+                }
 
-                if (!isEqual(mOBJMaterials[i].dissolve,
-                             pOBJData.mOBJMaterials[i].dissolve))
+                if (not isEqual(mOBJMaterials[i].dissolve,
+                             pOBJData.mOBJMaterials[i].dissolve)) {
                     return false;
+                }
 
-                if (!(mOBJMaterials[i].illum ==
-                      pOBJData.mOBJMaterials[i].illum))
+                if (not (mOBJMaterials[i].illum ==
+                      pOBJData.mOBJMaterials[i].illum)) {
                     return false;
+                }
 
                 if (mOBJMaterials[i].ambient_texname.compare(
-                                pOBJData.mOBJMaterials[i].ambient_texname))
+                                pOBJData.mOBJMaterials[i].ambient_texname)) {
                     return false;
+                }
 
                 if (mOBJMaterials[i].diffuse_texname.compare(
-                                pOBJData.mOBJMaterials[i].diffuse_texname))
+                                pOBJData.mOBJMaterials[i].diffuse_texname)) {
                     return false;
+                }
 
                 if (mOBJMaterials[i].specular_texname.compare(
-                                pOBJData.mOBJMaterials[i].specular_texname))
+                                pOBJData.mOBJMaterials[i].specular_texname)) {
                     return false;
+                }
 
                 if (mOBJMaterials[i].specular_highlight_texname.compare(
-                        pOBJData.mOBJMaterials[i].specular_highlight_texname))
+                        pOBJData.mOBJMaterials[i].specular_highlight_texname)) {
                     return false;
+                }
 
                 if (mOBJMaterials[i].bump_texname.compare(
-                                pOBJData.mOBJMaterials[i].bump_texname))
+                                pOBJData.mOBJMaterials[i].bump_texname)) {
                     return false;
+                }
 
                 if (mOBJMaterials[i].displacement_texname.compare(
-                                pOBJData.mOBJMaterials[i].displacement_texname))
+                                pOBJData.mOBJMaterials[i].displacement_texname)) {
                     return false;
+                }
 
                 if (mOBJMaterials[i].alpha_texname.compare(
-                                pOBJData.mOBJMaterials[i].alpha_texname))
+                                pOBJData.mOBJMaterials[i].alpha_texname)) {
                     return false;
+                }
 
+                // TODO: Comparision of unknown_parameter
             }
             return true;
-        } else if (!mOBJMaterials.size() && !pOBJData.mOBJMaterials.size()) {
+        } else if (not mOBJMaterials.size() && not pOBJData.mOBJMaterials.size()) {
             return true;
         } else {
             return false;
@@ -232,20 +257,27 @@ class OBJData {
     }
 
     bool operator==(const OBJData<T>& pOBJData) {
-        return (isEqualOBJAttributes(pOBJData) &&
-                isEqualOBJMaterials(pOBJData));
+        return (areAttributesSame(pOBJData) &&
+                areMaterialsSame(pOBJData));
     }
 };
 
+namespace obj
+{
 /*
  * Usage:
- * vector< obj::OBJData<float> > objs;
- * obj::read<float>(objs, obj_file_path, mtl_file_base_path or nullptr);
+ * OBJData<float> objData;
+ * obj::read<float>(objData, "/path/to/file/filename.obj", mtl_file_base_path or nullptr);
  */
 template<typename T=float>
 bool read(OBJData<T> &pObjects, const char* pFileName,
           const char* pMatFileBasePath);
 
+/*
+ * Usage:
+ * OBJData<float> objData;
+ * obj::write<float>("/path/to/file/filename.obj", objData);
+ */
 template<typename T=float>
 bool write(const char* pFileName, const OBJData<T> &pObjects);
 

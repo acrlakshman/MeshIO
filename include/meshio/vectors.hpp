@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, Lakshman Anumolu, Pradeep Garigipati
+ * Copyright (c) 2017, Lakshman Anumolu, Pradeep Garigipati
  * All rights reserved.
  *
  * This file is part of MeshIO whose distribution is governed by
@@ -23,7 +23,7 @@ class Vec4 {
     typedef typename std::vector<T>::const_iterator const_viterator;
 
     Vec4(T pX, T pY, T pZ, T pW) : elems({pX, pY, pZ, pW}) {}
-    Vec4() : Vec4(0, 0, 0, 0) { }
+    Vec4() : Vec4(0, 0, 0, 1) { }
     ~Vec4() {}
 
     virtual std::size_t size() const { return 4; }
@@ -58,8 +58,8 @@ class Vec3 : public Vec4<T> {
     ~Vec3() {}
 
     std::size_t size() const { return 3; }
-    viterator end() { return Vec4<T>::end()--; }
-    const_viterator end() const { return Vec4<T>::end()--; }
+    viterator end() { return --Vec4<T>::end(); }
+    const_viterator end() const { return --Vec4<T>::end(); }
 };
 
 template<class T>
@@ -68,13 +68,13 @@ class Vec2 : public Vec4<T> {
     typedef typename std::vector<T>::iterator viterator;
     typedef typename std::vector<T>::const_iterator const_viterator;
 
-    Vec2(T pX, T pY, T pZ) : Vec4<T>(pX, pY, 0, 0) {}
+    Vec2(T pX, T pY) : Vec4<T>(pX, pY, 0, 0) {}
     Vec2() : Vec4<T>(0, 0, 0, 0) {}
     ~Vec2() {}
 
     std::size_t size() const { return 2; }
-    viterator end() { return Vec4<T>::end()-2; }
-    const_viterator end() const { return Vec4<T>::end()-2; }
+    viterator end() { return (Vec4<T>::end()-2); }
+    //const_viterator end() const { return (Vec4<T>::end()-2); }
 };
 
 

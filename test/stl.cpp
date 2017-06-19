@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, Lakshman Anumolu, Pradeep Garigipati
+ * Copyright (c) 2017, Lakshman Anumolu, Pradeep Garigipati
  * All rights reserved.
  *
  * This file is part of MeshIO whose distribution is governed by
@@ -98,4 +98,50 @@ TEST(STL, CROSS_CHECK)
     stl::read<float>(asciiReadObjs, TEST_DIR "/cube_ascii.stl");
 
     EXPECT_TRUE(binReadObjs[0] == asciiReadObjs[0]);
+}
+
+TEST(STL, WRONG_ATTRIBUTES_SIZE)
+{
+    vector< STLData<float> > referenceObjs;
+    vector< STLData<float> > tmpObjs;
+    initializeReferenceSTLObj(referenceObjs);
+
+    tmpObjs.resize(referenceObjs.size());
+    EXPECT_FALSE(tmpObjs[0] == referenceObjs[0]);
+
+    tmpObjs[0].mPositions.resize(referenceObjs[0].mPositions.size());
+    EXPECT_FALSE(tmpObjs[0] == referenceObjs[0]);
+
+    tmpObjs[0].mNormals.resize(referenceObjs[0].mNormals.size());
+    EXPECT_FALSE(tmpObjs[0] == referenceObjs[0]);
+
+    tmpObjs[0].mTexturePositions.resize(referenceObjs[0].mTexturePositions.size());
+    EXPECT_FALSE(tmpObjs[0] == referenceObjs[0]);
+
+    tmpObjs[0].mColors.resize(referenceObjs[0].mColors.size());
+    EXPECT_FALSE(tmpObjs[0] == referenceObjs[0]);
+
+    tmpObjs[0].mParameterSpaceVertices.resize(referenceObjs[0].mParameterSpaceVertices.size());
+    EXPECT_FALSE(tmpObjs[0] == referenceObjs[0]);
+
+    tmpObjs[0].mPositions = referenceObjs[0].mPositions;
+    EXPECT_FALSE(tmpObjs[0] == referenceObjs[0]);
+
+    tmpObjs[0].mNormals.push_back(meshio::Vec3<float>(1, 0, 0));
+    EXPECT_FALSE(tmpObjs[0] == referenceObjs[0]);
+    tmpObjs[0].mNormals = referenceObjs[0].mNormals;
+
+    tmpObjs[0].mTexturePositions.push_back(meshio::Vec3<float>(1, 0, 0));
+    EXPECT_FALSE(tmpObjs[0] == referenceObjs[0]);
+    tmpObjs[0].mTexturePositions = referenceObjs[0].mTexturePositions;
+    
+    tmpObjs[0].mColors.push_back(meshio::Vec3<float>(1, 0, 0));
+    EXPECT_FALSE(tmpObjs[0] == referenceObjs[0]);
+    tmpObjs[0].mColors = referenceObjs[0].mColors;
+
+    tmpObjs[0].mParameterSpaceVertices.push_back(meshio::Vec3<float>(1, 0, 0));
+    EXPECT_FALSE(tmpObjs[0] == referenceObjs[0]);
+
+    referenceObjs.clear();
+    tmpObjs.clear();
 }
